@@ -1,17 +1,18 @@
 import SwiftUI
 
-/// M0: Pro gate shell. M4 implements the timeline.
+/// M0/M4.5: Pro gate. M4 implements the timeline.
 struct CalendarGateView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                Text("Calendar is a Pro feature")
+                Text("See daily calls and sore-spot notes")
                     .font(.headline)
-                Text("See daily calls and pain entries after a one-time unlock.")
+                    .multilineTextAlignment(.center)
+                Text("One-time unlock opens your calendar timeline on this device.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                Button("Unlock Pro") {
+                Button("Unlock Pro — $4.99") {
                     // M4.5 StoreKit
                 }
                 .buttonStyle(.borderedProminent)

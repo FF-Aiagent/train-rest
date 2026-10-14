@@ -16,7 +16,8 @@ US-first iOS wellness app: one daily call — **Train / Easy / Rest** — from H
 - [x] M0 Shell — three tabs + disclaimer placeholder
 - [x] M1 HealthKit + degradation (source landed; device QA pending)
 - [x] M2 Today decision engine (rule-based, deterministic)
-- [ ] M3 Injury log (on-device)
+- DecisionEngine unit test stubs in TrainRestTests/
+- [x] M3 Sore-spot photo log (on-device; Pro-gated)
 - [ ] M4 Calendar timeline
 - [ ] M4.5 StoreKit non-consumable Pro
 - [ ] M5 TestFlight + privacy labels

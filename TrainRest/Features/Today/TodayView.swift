@@ -11,7 +11,7 @@ struct TodayView: View {
                 } else if let call = model.call {
                     callContent(call)
                 } else {
-                    Text("Unable to build today’s call")
+                    Text("Can’t make today’s call yet — try Refresh.")
                 }
             }
             .padding()
