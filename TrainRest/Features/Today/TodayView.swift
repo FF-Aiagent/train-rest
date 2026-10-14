@@ -18,6 +18,9 @@ struct TodayView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .navigationTitle("Today")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    NavigationLink("Privacy") { AboutPrivacyView() }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Refresh") {
                         Task { await model.refresh(requestAuthIfNeeded: false) }
