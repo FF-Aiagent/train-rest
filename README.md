@@ -19,7 +19,7 @@ US-first iOS wellness app: one daily call — **Train / Easy / Rest** — from H
 - DecisionEngine unit test stubs in TrainRestTests/
 - [x] M3 Sore-spot photo log (on-device; Pro-gated)
 - [x] M4 Calendar timeline (Pro-gated; reads DailyCallStore + SoreSpotStore)
-- [ ] M4.5 StoreKit non-consumable Pro
+- [x] M4.5 StoreKit non-consumable Pro (`app.trainrest.pro`) + Restore
 - [ ] M5 TestFlight + privacy labels
 
 ## Build

@@ -1,6 +1,6 @@
 import Foundation
 
-/// M4.5 will flip this via StoreKit. Until then, DEBUG builds can unlock for UI work.
+/// Local entitlement flag. StoreKitPro sets this after verified purchase / restore.
 @MainActor
 final class ProAccess: ObservableObject {
     static let shared = ProAccess()
@@ -10,11 +10,7 @@ final class ProAccess: ObservableObject {
     private let key = "trainrest.isPro"
 
     private init() {
-        #if DEBUG
         isPro = UserDefaults.standard.bool(forKey: key)
-        #else
-        isPro = UserDefaults.standard.bool(forKey: key)
-        #endif
     }
 
     func unlockForDebugOrStoreKit() {

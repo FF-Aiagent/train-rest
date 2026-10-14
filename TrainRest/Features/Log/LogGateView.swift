@@ -11,7 +11,10 @@ struct LogGateView: View {
                 if pro.isPro {
                     logList
                 } else {
-                    paywall
+                    ProUnlockPanel(
+                        headline: "Photo log for sore spots",
+                        bodyText: "Unlock once to save photo-first notes on this device — body area, how sore (1–5), optional one-line note."
+                    )
                 }
             }
             .navigationTitle("Log")
@@ -19,25 +22,6 @@ struct LogGateView: View {
                 AddSoreSpotView(store: store)
             }
         }
-    }
-
-    private var paywall: some View {
-        VStack(spacing: 16) {
-            Text("Photo log for sore spots")
-                .font(.headline)
-                .multilineTextAlignment(.center)
-            Text("Unlock once to save photo-first notes on this device — body area, how sore (1–5), optional one-line note.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            Button("Unlock Pro — $4.99") {
-                // M4.5 StoreKit; DEBUG unlock so UI can be tested now
-                pro.unlockForDebugOrStoreKit()
-            }
-            .buttonStyle(.borderedProminent)
-            DisclaimerView()
-        }
-        .padding()
     }
 
     private var logList: some View {

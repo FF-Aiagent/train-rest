@@ -12,29 +12,14 @@ struct CalendarGateView: View {
                 if pro.isPro {
                     calendarContent
                 } else {
-                    paywall
+                    ProUnlockPanel(
+                        headline: "See daily calls and sore-spot notes",
+                        bodyText: "One-time unlock opens your calendar timeline on this device."
+                    )
                 }
             }
             .navigationTitle("Calendar")
         }
-    }
-
-    private var paywall: some View {
-        VStack(spacing: 16) {
-            Text("See daily calls and sore-spot notes")
-                .font(.headline)
-                .multilineTextAlignment(.center)
-            Text("One-time unlock opens your calendar timeline on this device.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            Button("Unlock Pro — $4.99") {
-                pro.unlockForDebugOrStoreKit()
-            }
-            .buttonStyle(.borderedProminent)
-            DisclaimerView()
-        }
-        .padding()
     }
 
     private var calendarContent: some View {
