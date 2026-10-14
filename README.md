@@ -2,6 +2,8 @@
 
 US-first iOS wellness app: one daily call — **Train / Easy / Rest** — from HealthKit signals, plus an optional Pro injury photo log and calendar.
 
+**Repo:** https://github.com/FF-Aiagent/train-rest
+
 ## Scope (frozen)
 
 - Free forever: Today decision (with HealthKit deny/empty degradation)
@@ -11,18 +13,18 @@ US-first iOS wellness app: one daily call — **Train / Easy / Rest** — from H
 
 ## Milestones
 
-- M0 Shell — three tabs + disclaimer placeholder
-- M1 HealthKit + degradation
-- M2 Today decision engine
-- M3 Injury log (on-device)
-- M4 Calendar timeline
-- M4.5 StoreKit non-consumable Pro
-- M5 TestFlight + privacy labels
+- [x] M0 Shell — three tabs + disclaimer placeholder
+- [x] M1 HealthKit + degradation (source landed; device QA pending)
+- [x] M2 Today decision engine (rule-based, deterministic)
+- [ ] M3 Injury log (on-device)
+- [ ] M4 Calendar timeline
+- [ ] M4.5 StoreKit non-consumable Pro
+- [ ] M5 TestFlight + privacy labels
 
 ## Build
 
-Requires macOS + Xcode 15+ and an Apple Developer team with HealthKit entitlement. This repo is scaffolded so you can open `TrainRest.xcodeproj` (generate locally) or add the `TrainRest` sources to a new App project.
+Requires macOS + Xcode 15+ and an Apple Developer team with HealthKit capability. Create an iOS App target, add the `TrainRest` sources, enable HealthKit, and point entitlements at `TrainRest/Resources/TrainRest.entitlements`. Or generate with [XcodeGen](https://github.com/yonaskolb/XcodeGen) from `project.yml`.
 
-## Non-medical disclaimer (draft)
+## Non-medical disclaimer
 
 Train / Rest provides training preference hints only. It does not diagnose, treat, or give medical advice. Pain photos are a personal log, not a clinical record.

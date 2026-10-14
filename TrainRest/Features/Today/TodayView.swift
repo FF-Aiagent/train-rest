@@ -1,26 +1,53 @@
 import SwiftUI
 
-/// M0 placeholder. M1–M2 will wire HealthKit + decision engine.
 struct TodayView: View {
+    @StateObject private var model = TodayViewModel()
+
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Rest")
-                    .font(.largeTitle.bold())
-                    .accessibilityLabel("Today's call: Rest")
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("• Placeholder — HealthKit not connected yet")
-                    Text("• Open the app on a Mac build to continue M1")
-                    Text("• This is a training preference hint, not a prescription")
+            Group {
+                if model.isLoading && model.call == nil {
+                    ProgressView("Loading today’s call…")
+                } else if let call = model.call {
+                    callContent(call)
+                } else {
+                    Text("Unable to build today’s call")
                 }
-                .font(.body)
-
-                Spacer()
-                DisclaimerView()
             }
             .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .navigationTitle("Today")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Refresh") {
+                        Task { await model.refresh(requestAuthIfNeeded: false) }
+                    }
+                }
+            }
+            .onAppear { model.onAppear() }
+        }
+    }
+
+    @ViewBuilder
+    private func callContent(_ call: DailyCall) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(call.verdict.rawValue)
+                .font(.largeTitle.bold())
+                .accessibilityLabel("Today's call: \(call.verdict.rawValue)")
+
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(Array(call.reasons.enumerated()), id: \.offset) { _, reason in
+                    Text("• \(reason)")
+                        .font(.body)
+                }
+            }
+
+            Text("Training preference hint — not a prescription.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+            DisclaimerView()
         }
     }
 }
