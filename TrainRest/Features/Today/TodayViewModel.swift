@@ -22,6 +22,8 @@ final class TodayViewModel: ObservableObject {
         }
 
         let snap = await health.loadSnapshot()
-        call = DecisionEngine.decide(from: snap)
+        let decided = DecisionEngine.decide(from: snap)
+        call = decided
+        DailyCallStore.shared.save(decided)
     }
 }

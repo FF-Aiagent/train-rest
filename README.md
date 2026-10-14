@@ -18,7 +18,7 @@ US-first iOS wellness app: one daily call — **Train / Easy / Rest** — from H
 - [x] M2 Today decision engine (rule-based, deterministic)
 - DecisionEngine unit test stubs in TrainRestTests/
 - [x] M3 Sore-spot photo log (on-device; Pro-gated)
-- [ ] M4 Calendar timeline
+- [x] M4 Calendar timeline (Pro-gated; reads DailyCallStore + SoreSpotStore)
 - [ ] M4.5 StoreKit non-consumable Pro
 - [ ] M5 TestFlight + privacy labels
 
