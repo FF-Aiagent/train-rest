@@ -57,3 +57,14 @@ Then Signing & Capabilities → HealthKit, pick your Team, Run.
 - Missing `@main`: only one `TrainRestApp.swift` should be in the target.
 - HealthKit link error: add capability + entitlements.
 - `PhotosUI` / StoreKit: iOS 17+ deployment target.
+
+
+## If you see “target does not have an Info.plist”
+
+`project.yml` now sets `GENERATE_INFOPLIST_FILE: YES`. Re-run:
+
+```bash
+xcodegen generate
+```
+
+Or in Xcode: Build Settings → search Generate Info.plist File → **Yes**.

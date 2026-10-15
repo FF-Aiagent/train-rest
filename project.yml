@@ -12,12 +12,18 @@ targets:
     type: application
     platform: iOS
     sources:
-      - TrainRest
+      - path: TrainRest
+        excludes:
+          - "**/*.md"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.trainrest.TrainRest
+        GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Train / Rest
-        INFOPLIST_KEY_NSHealthShareUsageDescription: Train / Rest reads workout, sleep, and heart data to suggest a training preference for today. It does not diagnose or treat conditions.
-        INFOPLIST_KEY_NSCameraUsageDescription: Take a photo for your personal pain log. Photos stay on this device.
-        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Choose a photo for your personal pain log. Photos stay on this device.
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_NSHealthShareUsageDescription: "Reads workout, sleep, and heart data for today's training preference hint. Not medical advice."
+        INFOPLIST_KEY_NSCameraUsageDescription: "Take a photo for your personal sore-spot log. Photos stay on this device."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Choose a photo for your personal sore-spot log. Photos stay on this device."
         CODE_SIGN_ENTITLEMENTS: TrainRest/Resources/TrainRest.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
