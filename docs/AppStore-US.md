@@ -4,8 +4,9 @@ Source: Product Lead (frozen scope). Engineering pads this into the repo for M5;
 
 ## Subtitle (≤30 characters)
 
+<!-- Cooper / Product lock 2026-10-15 -->
 ```
-Daily train or rest call
+Running call + sore-spot log
 ```
 
 ## Promotional text (optional)
@@ -26,11 +27,12 @@ Optional Pro ($4.99 one-time) unlocks a photo-based sore-spot log and a calendar
 Train / Rest is a training preference helper, not a medical device. It does not diagnose, treat, or prevent any condition.
 ```
 
-## Keywords (draft — Cooper may revise after name scan)
+## Keywords (draft — Cooper scan applied)
 
 ```
-running,rest day,training,recovery,healthkit,sore,runner,workout
+running,readiness,HRV,sore,recovery,healthkit,runner,workout
 ```
+Avoid stuffing `train` / `rest` here (duplicates the app name; hurts differentiation).
 
 ## Category
 
