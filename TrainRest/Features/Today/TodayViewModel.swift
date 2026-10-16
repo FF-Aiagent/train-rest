@@ -4,24 +4,53 @@ import Foundation
 final class TodayViewModel: ObservableObject {
     @Published private(set) var call: DailyCall?
     @Published private(set) var isLoading = false
-    @Published private(set) var didAskAuth = false
+    @Published private(set) var authorization: HealthSnapshot.AuthorizationState = .notDetermined
 
     private let health = HealthKitClient()
 
+    /// Show primary Allow Health CTA (Critiquito F1).
+    var needsHealthCTA: Bool {
+        authorization == .notDetermined
+    }
+
+    /// Soften Refresh when Health still blocked.
+    var refreshIsSecondary: Bool {
+        switch authorization {
+        case .notDetermined, .denied, .unavailable:
+            return true
+        default:
+            return false
+        }
+    }
+
+    /// Hide "not a prescription" until Health is at least partially in play.
+    var showsPrescriptionHint: Bool {
+        switch authorization {
+        case .authorized, .partial:
+            return true
+        default:
+            return false
+        }
+    }
+
     func onAppear() {
-        Task { await refresh(requestAuthIfNeeded: true) }
+        Task { await refresh(requestAuthIfNeeded: false) }
+    }
+
+    func allowHealth() async {
+        await refresh(requestAuthIfNeeded: true)
     }
 
     func refresh(requestAuthIfNeeded: Bool) async {
         isLoading = true
         defer { isLoading = false }
 
-        if requestAuthIfNeeded && !didAskAuth {
-            didAskAuth = true
+        if requestAuthIfNeeded {
             await health.requestAuthorization()
         }
 
         let snap = await health.loadSnapshot()
+        authorization = snap.authorization
         let decided = DecisionEngine.decide(from: snap)
         call = decided
         DailyCallStore.shared.save(decided)

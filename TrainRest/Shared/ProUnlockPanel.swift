@@ -8,14 +8,14 @@ struct ProUnlockPanel: View {
     @StateObject private var pro = ProAccess.shared
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
             Text(headline)
                 .font(.headline)
-                .multilineTextAlignment(.center)
+                .multilineTextAlignment(.leading)
             Text(bodyText)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+                .multilineTextAlignment(.leading)
 
             Button {
                 Task { await store.purchase() }
@@ -38,12 +38,14 @@ struct ProUnlockPanel: View {
                 Text(err)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                    .multilineTextAlignment(.leading)
             }
 
+            Spacer(minLength: 0)
             DisclaimerView()
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .task { await store.refresh() }
     }
 }
