@@ -40,6 +40,7 @@ You need **macOS + Xcode 15+** and an Apple Developer team. This Linux bot can p
 ## Docs
 
 - [docs/OpenInXcode.md](docs/OpenInXcode.md) — clone → Xcode → run
+- [docs/SmokeAndScreens.md](docs/SmokeAndScreens.md) — Mac smoke ticks + four Critiquito shots
 - [docs/AppStore-US.md](docs/AppStore-US.md) — US listing draft
 - [docs/PrivacyNutritionLabels.md](docs/PrivacyNutritionLabels.md) — privacy labels
 - [StoreKit.storekit.md](StoreKit.storekit.md) — IAP product id

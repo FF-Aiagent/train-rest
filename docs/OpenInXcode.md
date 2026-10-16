@@ -61,10 +61,12 @@ Then Signing & Capabilities → HealthKit, pick your Team, Run.
 
 ## If you see “target does not have an Info.plist”
 
-`project.yml` now sets `GENERATE_INFOPLIST_FILE: YES`. Re-run:
+`main` ships `TrainRest/Info.plist` and `project.yml` sets `GENERATE_INFOPLIST_FILE: NO` + `INFOPLIST_FILE: TrainRest/Info.plist`. Do **not** flip Generate Info.plist File back to Yes.
 
 ```bash
-xcodegen generate
+git pull
+xcodegen generate   # if you use path B
+open TrainRest.xcodeproj
 ```
 
-Or in Xcode: Build Settings → search Generate Info.plist File → **Yes**.
+In Xcode: Build Settings → Info.plist File should be `TrainRest/Info.plist`. Health / Camera / Photos usage strings live in that file.
