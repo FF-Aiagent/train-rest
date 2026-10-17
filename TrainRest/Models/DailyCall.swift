@@ -4,6 +4,8 @@ enum CallVerdict: String, CaseIterable, Codable {
     case train = "Train"
     case easy = "Easy"
     case rest = "Rest"
+    /// Authorized/partial but no usable samples — non-conclusion title (QA + Critiquito F7).
+    case notEnoughData = "Not enough data"
 }
 
 struct DailyCall: Equatable {

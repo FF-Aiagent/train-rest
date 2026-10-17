@@ -28,7 +28,7 @@ enum DecisionEngine {
         if (snap.authorization == .authorized || snap.authorization == .partial), !hasAnySignal {
             reasons.append("No workout, sleep, or heart samples yet")
             return DailyCall(
-                verdict: .easy,
+                verdict: .notEnoughData,
                 reasons: reasons + ["Not enough Health data yet — not guessing recovery"],
                 asOf: now
             )

@@ -34,12 +34,12 @@ final class DecisionEngineTests: XCTestCase {
         let call = DecisionEngine.decide(from: snap, now: Date(timeIntervalSince1970: 2))
         XCTAssertEqual(call.verdict, .train)
     }
-}
 
-    func testAuthorizedEmptySignalsYieldsEasyInsufficient() {
+    func testAuthorizedEmptySignalsYieldsNotEnoughData() {
         let snap = HealthSnapshot(authorization: .authorized)
         let call = DecisionEngine.decide(from: snap, now: Date(timeIntervalSince1970: 3))
-        XCTAssertEqual(call.verdict, .easy)
+        XCTAssertEqual(call.verdict, .notEnoughData)
+        XCTAssertEqual(call.verdict.rawValue, "Not enough data")
         XCTAssertTrue(call.reasons.contains(where: { $0.contains("not guessing") || $0.contains("Not enough") }))
     }
 
@@ -48,7 +48,8 @@ final class DecisionEngineTests: XCTestCase {
         XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .train)).verdict, .train)
         XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .easy)).verdict, .easy)
         XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .rest)).verdict, .rest)
-        XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .insufficient)).verdict, .easy)
+        XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .insufficient)).verdict, .notEnoughData)
         XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .denied)).verdict, .easy)
         #endif
     }
+}

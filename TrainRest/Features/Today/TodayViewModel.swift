@@ -23,10 +23,10 @@ final class TodayViewModel: ObservableObject {
         }
     }
 
-    /// Hide "not a prescription" until Health is at least partially in play.
+    /// Show "not a prescription" only for Train/Easy/Rest conclusions (hide on CTA + insufficient).
     var showsPrescriptionHint: Bool {
-        switch authorization {
-        case .authorized, .partial:
+        switch call?.verdict {
+        case .train, .easy, .rest:
             return true
         default:
             return false

@@ -252,7 +252,7 @@ enum FakeHealth {
                 restingHR: 72
             )
         case .insufficient:
-            // Authorized but no samples — DecisionEngine reasons explain missing data
+            // Authorized but no samples → DecisionEngine .notEnoughData (not Train/Easy/Rest)
             return HealthSnapshot(authorization: .authorized)
         }
     }

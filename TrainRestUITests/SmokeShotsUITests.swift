@@ -56,7 +56,7 @@ final class SmokeShotsUITests: XCTestCase {
             ("10-today-train", "train", "Train"),
             ("11-today-easy", "easy", "Easy"),
             ("12-today-rest", "rest", "Rest"),
-            ("13-today-insufficient", "insufficient", "Easy"),
+            ("13-today-insufficient", "insufficient", "Not enough data"),
             ("14-today-not-granted", "notGranted", "Allow Apple Health"),
         ]
 
