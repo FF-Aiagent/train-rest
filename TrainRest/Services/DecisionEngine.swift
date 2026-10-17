@@ -21,6 +21,19 @@ enum DecisionEngine {
             break
         }
 
+        let hasAnySignal = snap.recentRunMinutes != nil
+            || snap.sleepHours != nil
+            || snap.hrvMs != nil
+            || snap.restingHR != nil
+        if (snap.authorization == .authorized || snap.authorization == .partial), !hasAnySignal {
+            reasons.append("No workout, sleep, or heart samples yet")
+            return DailyCall(
+                verdict: .easy,
+                reasons: reasons + ["Not enough Health data yet — not guessing recovery"],
+                asOf: now
+            )
+        }
+
         if let minutes = snap.recentRunMinutes {
             if minutes >= 300 {
                 score += 2

@@ -35,3 +35,20 @@ final class DecisionEngineTests: XCTestCase {
         XCTAssertEqual(call.verdict, .train)
     }
 }
+
+    func testAuthorizedEmptySignalsYieldsEasyInsufficient() {
+        let snap = HealthSnapshot(authorization: .authorized)
+        let call = DecisionEngine.decide(from: snap, now: Date(timeIntervalSince1970: 3))
+        XCTAssertEqual(call.verdict, .easy)
+        XCTAssertTrue(call.reasons.contains(where: { $0.contains("not guessing") || $0.contains("Not enough") }))
+    }
+
+    func testFakeHealthScenariosMapToVerdicts() {
+        #if DEBUG
+        XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .train)).verdict, .train)
+        XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .easy)).verdict, .easy)
+        XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .rest)).verdict, .rest)
+        XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .insufficient)).verdict, .easy)
+        XCTAssertEqual(DecisionEngine.decide(from: FakeHealth.snapshot(for: .denied)).verdict, .easy)
+        #endif
+    }

@@ -17,8 +17,35 @@ targets:
           - "**/*.md"
     settings:
       base:
+        PRODUCT_NAME: TrainRest
         PRODUCT_BUNDLE_IDENTIFIER: app.trainrest.TrainRest
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: TrainRest/Info.plist
         CODE_SIGN_ENTITLEMENTS: TrainRest/Resources/TrainRest.entitlements
         TARGETED_DEVICE_FAMILY: "1"
+
+  TrainRestUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: TrainRestUITests
+    dependencies:
+      - target: TrainRest
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.trainrest.TrainRestUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: TrainRest
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+
+schemes:
+  TrainRest:
+    build:
+      targets:
+        TrainRest: all
+        TrainRestUITests: [test]
+    test:
+      targets:
+        - TrainRestUITests
+

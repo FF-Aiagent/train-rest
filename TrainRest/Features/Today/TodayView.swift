@@ -2,6 +2,9 @@ import SwiftUI
 
 struct TodayView: View {
     @StateObject private var model = TodayViewModel()
+    #if DEBUG
+    @State private var showFakeHealthPicker = false
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -26,7 +29,30 @@ struct TodayView: View {
                         Task { await model.refresh(requestAuthIfNeeded: false) }
                     }
                 }
+                #if DEBUG
+                ToolbarItem(placement: .bottomBar) {
+                    Button("Fake Health") {
+                        showFakeHealthPicker = true
+                    }
+                    .accessibilityIdentifier("fakeHealthDebug")
+                }
+                #endif
             }
+            #if DEBUG
+            .confirmationDialog("Fake Health (Debug)", isPresented: $showFakeHealthPicker, titleVisibility: .visible) {
+                Button("Off (real HealthKit)") {
+                    FakeHealth.setScenario(nil)
+                    Task { await model.refresh(requestAuthIfNeeded: false) }
+                }
+                ForEach(FakeHealth.Scenario.allCases) { scenario in
+                    Button(scenario.label) {
+                        FakeHealth.setScenario(scenario)
+                        Task { await model.refresh(requestAuthIfNeeded: false) }
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            }
+            #endif
             .onAppear { model.onAppear() }
         }
     }

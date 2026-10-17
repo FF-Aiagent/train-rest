@@ -24,3 +24,18 @@ Capture on iPhone simulator (or device), English UI, no debug overlays. Upload t
 ## After smoke (ASC, still Mac)
 
 IAP product `app.trainrest.pro` non-consumable $4.99 in App Store Connect; paste [AppStore-US.md](AppStore-US.md) + [PrivacyNutritionLabels.md](PrivacyNutritionLabels.md). Archive → TestFlight when Health on device looks right.
+
+## Fake Health (Debug / Simulator only)
+
+Release builds never include this path (`#if DEBUG`). On a Debug simulator build you can force Today states without a device or paid Developer account:
+
+**Launch args** (preferred for UITests / automation):
+
+```
+-FakeHealth train|easy|rest|insufficient|notGranted|denied
+```
+
+**In-app:** Today toolbar → **Fake Health** → pick a scenario (writes `UserDefaults` key `debug.fakeHealth`). Choose **Off** to use real HealthKit again.
+
+**UITest:** `SmokeShotsUITests.testFakeHealthVerdictShots` writes PNGs to `/tmp/trainrest-smoke/` (`10-today-train` … `14-today-not-granted`).
+

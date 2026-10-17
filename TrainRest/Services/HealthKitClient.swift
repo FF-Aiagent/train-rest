@@ -24,6 +24,12 @@ final class HealthKitClient: ObservableObject {
     }
 
     func requestAuthorization() async {
+        #if DEBUG
+        if FakeHealth.isEnabled {
+            FakeHealth.markAuthorized()
+            return
+        }
+        #endif
         guard isAvailable else { return }
         do {
             try await store.requestAuthorization(toShare: [], read: readTypes)
@@ -33,6 +39,11 @@ final class HealthKitClient: ObservableObject {
     }
 
     func loadSnapshot() async -> HealthSnapshot {
+        #if DEBUG
+        if let snap = FakeHealth.snapshotIfEnabled() {
+            return snap
+        }
+        #endif
         guard isAvailable else {
             return HealthSnapshot(authorization: .unavailable)
         }
@@ -138,3 +149,112 @@ final class HealthKitClient: ObservableObject {
         }
     }
 }
+
+#if DEBUG
+/// Simulator / Debug-only fake Health snapshots. Never compiled into Release.
+/// Flip with launch args: `-FakeHealth train|easy|rest|insufficient|notGranted|denied`
+/// or UserDefaults `debug.fakeHealth` (same raw values). Clear key / omit arg for real HealthKit.
+enum FakeHealth {
+    static let defaultsKey = "debug.fakeHealth"
+    private static let authorizedKey = "debug.fakeHealth.authorized"
+
+    enum Scenario: String, CaseIterable, Identifiable {
+        case notGranted
+        case denied
+        case train
+        case easy
+        case rest
+        case insufficient
+
+        var id: String { rawValue }
+
+        var label: String {
+            switch self {
+            case .notGranted: return "Not granted (CTA)"
+            case .denied: return "Denied"
+            case .train: return "Train"
+            case .easy: return "Easy"
+            case .rest: return "Rest"
+            case .insufficient: return "Insufficient data"
+            }
+        }
+    }
+
+    static var isEnabled: Bool { scenario != nil }
+
+    static var scenario: Scenario? {
+        let args = ProcessInfo.processInfo.arguments
+        if let idx = args.firstIndex(of: "-FakeHealth"), args.index(after: idx) < args.endIndex {
+            return Scenario(rawValue: args[args.index(after: idx)])
+        }
+        if let eq = args.first(where: { $0.hasPrefix("-FakeHealth=") }) {
+            return Scenario(rawValue: String(eq.dropFirst("-FakeHealth=".count)))
+        }
+        if let raw = UserDefaults.standard.string(forKey: defaultsKey), !raw.isEmpty, raw != "off" {
+            return Scenario(rawValue: raw)
+        }
+        return nil
+    }
+
+    static func setScenario(_ scenario: Scenario?) {
+        if let scenario {
+            UserDefaults.standard.set(scenario.rawValue, forKey: defaultsKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: defaultsKey)
+        }
+        UserDefaults.standard.removeObject(forKey: authorizedKey)
+    }
+
+    static func markAuthorized() {
+        UserDefaults.standard.set(true, forKey: authorizedKey)
+    }
+
+    static func snapshotIfEnabled() -> HealthSnapshot? {
+        guard var active = scenario else { return nil }
+        if active == .notGranted, UserDefaults.standard.bool(forKey: authorizedKey) {
+            // After Allow, leave CTA and show an empty authorized state.
+            active = .insufficient
+        }
+        return snapshot(for: active)
+    }
+
+    static func snapshot(for scenario: Scenario) -> HealthSnapshot {
+        switch scenario {
+        case .notGranted:
+            return HealthSnapshot(authorization: .notDetermined)
+        case .denied:
+            return HealthSnapshot(authorization: .denied)
+        case .train:
+            // Light load + OK sleep + comfortable HRV → Train
+            return HealthSnapshot(
+                authorization: .authorized,
+                recentRunMinutes: 60,
+                sleepHours: 8.0,
+                hrvMs: 70,
+                restingHR: 52
+            )
+        case .easy:
+            // Solid load + modest sleep → Easy
+            return HealthSnapshot(
+                authorization: .authorized,
+                recentRunMinutes: 180,
+                sleepHours: 6.5,
+                hrvMs: 40,
+                restingHR: 62
+            )
+        case .rest:
+            // High load + short sleep + low HRV + elevated RHR → Rest
+            return HealthSnapshot(
+                authorization: .authorized,
+                recentRunMinutes: 320,
+                sleepHours: 5.0,
+                hrvMs: 20,
+                restingHR: 72
+            )
+        case .insufficient:
+            // Authorized but no samples — DecisionEngine reasons explain missing data
+            return HealthSnapshot(authorization: .authorized)
+        }
+    }
+}
+#endif
