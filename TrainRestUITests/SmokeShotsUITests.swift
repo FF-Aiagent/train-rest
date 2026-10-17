@@ -84,4 +84,70 @@ final class SmokeShotsUITests: XCTestCase {
             app.terminate()
         }
     }
+
+    /// ASO / App Store placeholders: Fake Health data ON, Fake Health chrome OFF (`-StoreShots`).
+    func testASOStoreShots() throws {
+        let asoDir = "/tmp/trainrest-aso"
+        try FileManager.default.createDirectory(
+            at: URL(fileURLWithPath: asoDir),
+            withIntermediateDirectories: true
+        )
+        func asoSave(_ name: String) throws {
+            let data = XCUIScreen.main.screenshot().pngRepresentation
+            try data.write(to: URL(fileURLWithPath: "\(asoDir)/\(name).png"), options: .atomic)
+        }
+
+        // 1 Today call (Train) — no Fake Health toolbar
+        var app = XCUIApplication()
+        app.launchArguments = ["-StoreShots", "-FakeHealth", "train"]
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["Today"].waitForExistence(timeout: 15))
+        sleep(2)
+        XCTAssertFalse(app.buttons["fakeHealthDebug"].exists, "Fake Health chrome must be hidden for StoreShots")
+        let trainLabeled = app.staticTexts["Today's call: Train"].firstMatch
+        let trainPlain = app.staticTexts["Train"].firstMatch
+        XCTAssertTrue(
+            trainLabeled.waitForExistence(timeout: 8) || trainPlain.waitForExistence(timeout: 2),
+            "Expected Train verdict"
+        )
+        try asoSave("01-today-call")
+
+        // 3 Log locked
+        XCTAssertTrue(app.tabBars.buttons["Log"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Log"].tap()
+        sleep(2)
+        try asoSave("03-log-locked")
+
+        // 4 Calendar locked
+        app.tabBars.buttons["Calendar"].tap()
+        sleep(2)
+        try asoSave("04-calendar-locked")
+
+        // 5 Privacy
+        app.tabBars.buttons["Today"].tap()
+        sleep(1)
+        let privacy = app.buttons["Privacy"].firstMatch
+        XCTAssertTrue(privacy.waitForExistence(timeout: 5))
+        privacy.tap()
+        sleep(2)
+        try asoSave("05-privacy")
+        app.terminate()
+
+        // 2 Not enough data
+        app = XCUIApplication()
+        app.launchArguments = ["-StoreShots", "-FakeHealth", "insufficient"]
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["Today"].waitForExistence(timeout: 15))
+        sleep(2)
+        XCTAssertFalse(app.buttons["fakeHealthDebug"].exists)
+        let insufLabeled = app.staticTexts["Today's call: Not enough data"].firstMatch
+        let insufPlain = app.staticTexts["Not enough data"].firstMatch
+        XCTAssertTrue(
+            insufLabeled.waitForExistence(timeout: 8) || insufPlain.waitForExistence(timeout: 2),
+            "Expected Not enough data verdict"
+        )
+        try asoSave("02-today-insufficient")
+        app.terminate()
+    }
+
 }

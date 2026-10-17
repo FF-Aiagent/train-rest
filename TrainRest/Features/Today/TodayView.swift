@@ -4,6 +4,10 @@ struct TodayView: View {
     @StateObject private var model = TodayViewModel()
     #if DEBUG
     @State private var showFakeHealthPicker = false
+    /// Hide Fake Health chrome for App Store / ASO screenshots while still allowing `-FakeHealth` data.
+    private var showFakeHealthDebugChrome: Bool {
+        !ProcessInfo.processInfo.arguments.contains("-StoreShots")
+    }
     #endif
 
     var body: some View {
@@ -30,11 +34,13 @@ struct TodayView: View {
                     }
                 }
                 #if DEBUG
-                ToolbarItem(placement: .bottomBar) {
-                    Button("Fake Health") {
-                        showFakeHealthPicker = true
+                if showFakeHealthDebugChrome {
+                    ToolbarItem(placement: .bottomBar) {
+                        Button("Fake Health") {
+                            showFakeHealthPicker = true
+                        }
+                        .accessibilityIdentifier("fakeHealthDebug")
                     }
-                    .accessibilityIdentifier("fakeHealthDebug")
                 }
                 #endif
             }
